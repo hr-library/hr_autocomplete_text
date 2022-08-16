@@ -15,6 +15,7 @@ dependencies:
   get: ^4.6.5
   get_storage: ^2.0.3
   cloud_firestore: ^3.3.0
+  getwidget: ^3.0.1
 
 
 dev_dependencies:

@@ -20,6 +20,10 @@ class FirestoreUtils {
     await collectionDefaultData.doc(hrModel['key']).set(hrModel);
   }
 
+  Future<void> editDefaultDataItem(Map<String, dynamic> hrModel) async {
+    await collectionDefaultData.doc(hrModel['key']).update(hrModel);
+  }
+
   Future<List<String>> fetchDefaultData(String key) async {
     List<String> list = [];
     try {
