@@ -94,7 +94,6 @@ class DefaultDataList extends StatelessWidget {
       child: GFListTile(
         onTap: () {},
         title: Text(data),
-        description: Text(index.toString()),
         icon: Row(
           children: [
             IconButton(

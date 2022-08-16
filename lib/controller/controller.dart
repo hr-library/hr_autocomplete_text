@@ -13,7 +13,7 @@ class HrAutocompleteTextController {
     return await _firestoreUtils.fetchDefaultData(key);
   }
 
-  Future<List<String>> verifyInDefaultData({
+  Future<List<String>> verifyDefaultData({
     required String value,
     required List<String> listDefaultData,
     required String key,

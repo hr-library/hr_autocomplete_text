@@ -22,11 +22,11 @@ class HomePageController extends GetxController {
   }
 
   Future<void> addData() async {
-    listPattern.value = await _autocompleteTextController.verifyInDefaultData(
+    listPattern.value = await _autocompleteTextController.verifyDefaultData(
         value: patternEditingController.text,
         listDefaultData: listPattern.value,
         key: 'pattern');
-    listPattern2.value = await _autocompleteTextController.verifyInDefaultData(
+    listPattern2.value = await _autocompleteTextController.verifyDefaultData(
         value: patternEditingController2.text,
         listDefaultData: listPattern2.value,
         key: 'pattern2');
