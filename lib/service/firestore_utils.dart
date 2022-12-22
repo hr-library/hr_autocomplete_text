@@ -12,33 +12,39 @@ class FirestoreUtils {
 
   static final collectionDefaultData = _client
       .collection("defaultData")
-      .doc(GetStorage().read(GetStorageKey.platform))
-      .collection('hr');
+      .doc(GetStorage().read(GetStorageKey.platform));
 
   //***************DefaultData*******************
-  Future<void> insertDefaultDataItem(Map<String, dynamic> hrModel) async {
-    await collectionDefaultData.doc(hrModel['key']).set(hrModel);
+  Future<void> insertDefaultDataItem(ListDefaultData hrModel) async {
+    await collectionDefaultData
+        .collection(hrModel.userUid)
+        .doc(hrModel.key)
+        .set(hrModel.toJson());
   }
 
-  Future<void> editDefaultDataItem(Map<String, dynamic> hrModel) async {
-    await collectionDefaultData.doc(hrModel['key']).update(hrModel);
+  Future<void> editDefaultDataItem(ListDefaultData hrModel) async {
+    await collectionDefaultData
+        .collection(hrModel.userUid)
+        .doc(hrModel.key)
+        .update(hrModel.toJson());
   }
 
-  Future<List<String>> fetchDefaultData(String key) async {
-    List<String> list = [];
+  Future<ListDefaultData> fetchDefaultData(String key, String userUid) async {
     try {
-      var documentSnapshot =
-          await collectionDefaultData.where('key', isEqualTo: key).get();
+      var documentSnapshot = await collectionDefaultData
+          .collection(userUid)
+          .where('key', isEqualTo: key)
+          .get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
           documentSnapshot.docs;
-      docs.first.data()['list'].forEach((element) {
-        list.add(element);
-      });
+      return ListDefaultData.fromJson(docs[0].data());
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
+      ListDefaultData listDefaultData =
+          ListDefaultData(key: key, list: [], userUid: userUid);
+      return listDefaultData;
     }
-    return list;
   }
 }

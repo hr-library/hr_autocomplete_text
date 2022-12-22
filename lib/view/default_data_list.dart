@@ -1,7 +1,7 @@
 part of '../hr_autocomplete_text.dart';
 
 class DefaultDataListScaffold extends StatelessWidget {
-  final List<List<String>> listDefaultData;
+  final List<ListDefaultData> listDefaultData;
   final List<String> listKey;
   DefaultDataListScaffold({
     required this.listDefaultData,
@@ -34,7 +34,7 @@ class DefaultDataListScaffold extends StatelessWidget {
 }
 
 class DefaultDataList extends StatelessWidget {
-  final List<List<String>> listDefaultData;
+  final List<ListDefaultData> listDefaultData;
   final List<String> listKey;
   DefaultDataList({
     required this.listDefaultData,
@@ -61,8 +61,8 @@ class DefaultDataList extends StatelessWidget {
   List<Widget> _getTableFromMap() {
     List<Widget> list = [];
     int i = 0;
-    for (List<String> element in listDefaultData) {
-      element.sort((a, b) => a.compareTo(b));
+    for (ListDefaultData element in listDefaultData) {
+      //element.sort((a, b) => a.compareTo(b));
       list.add(ExpansionTile(
         title: Text(listKey[i]),
         children: <Widget>[
@@ -77,18 +77,18 @@ class DefaultDataList extends StatelessWidget {
     return list;
   }
 
-  Widget _listViewBuilder(List<String> allData, int keyIndex) {
+  Widget _listViewBuilder(ListDefaultData allData, int keyIndex) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: allData.length,
+      itemCount: allData.list.length,
       itemBuilder: (BuildContext context, int index) {
-        String data = allData[index];
+        String data = allData.list[index];
         return _card(data, index, keyIndex, allData);
       },
     );
   }
 
-  Widget _card(String data, int index, int keyIndex, List<String> allData) {
+  Widget _card(String data, int index, int keyIndex, ListDefaultData allData) {
     return Card(
       elevation: 0,
       child: GFListTile(

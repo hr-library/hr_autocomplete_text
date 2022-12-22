@@ -9,71 +9,85 @@ class HrAutocompleteTextController {
     Get.forceAppUpdate();
   }
 
-  Future<List<String>> fetchDefaultData({required String key}) async {
-    return await _firestoreUtils.fetchDefaultData(key);
+  Future<ListDefaultData> fetchDefaultData({
+    required String key,
+    required String userUid,
+  }) async {
+    return await _firestoreUtils.fetchDefaultData(key, userUid);
   }
 
-  Future<List<String>> verifyDefaultData({
+  Future<ListDefaultData> verifyDefaultData({
     required String value,
-    required List<String> listDefaultData,
+    required ListDefaultData listDefaultData,
     required String key,
+    required String userUid,
   }) async {
-    if (!listDefaultData.contains(value)) {
+    if (!listDefaultData.list.contains(value)) {
       print("$logTrace Saving....");
-      return await addDefaultDataToFirebase(value, listDefaultData, key);
+      return await addDefaultDataToFirebase(
+        data: value,
+        listDefaultData: listDefaultData,
+        key: key,
+        userUid: userUid,
+      );
     } else {
       print("$logTrace Already Saved");
       return listDefaultData;
     }
   }
 
-  Future<List<String>> addDefaultDataToFirebase(
-      String data, List<String> listDefaultData, String key) async {
+  Future<ListDefaultData> addDefaultDataToFirebase({
+    required String data,
+    required ListDefaultData listDefaultData,
+    required String key,
+    required userUid,
+  }) async {
     List<String> list = [];
     list.add(data);
-    for (String dataPatternInput in listDefaultData) {
+    for (String dataPatternInput in listDefaultData.list) {
       list.add(dataPatternInput);
     }
-    Map<String, dynamic> newList = {
-      'key': key,
-      'list': list,
-    };
-    await _firestoreUtils.insertDefaultDataItem(newList);
-    return list;
+    ListDefaultData listDefaultDataModel = ListDefaultData(
+      key: key,
+      list: list,
+      userUid: userUid,
+    );
+    await _firestoreUtils.insertDefaultDataItem(listDefaultDataModel);
+    return listDefaultDataModel;
   }
 
   Future<void> editDefaultData({
     required String oldValue,
     required String newValue,
-    required List<String> listDefaultData,
-    required String key,
+    required ListDefaultData listDefaultData,
   }) async {
-    listDefaultData.add(newValue);
-    listDefaultData.remove(oldValue);
-    Map<String, dynamic> newList = {
-      'key': key,
-      'list': listDefaultData,
-    };
-    await _firestoreUtils.editDefaultDataItem(newList);
+    List<String> list = [];
+    list.addAll(listDefaultData.list);
+    list.add(newValue);
+    list.remove(oldValue);
+    ListDefaultData listDefaultDataModel = listDefaultData.copyWith(
+      list: list,
+    );
+    await _firestoreUtils.editDefaultDataItem(listDefaultDataModel);
   }
 
   Future<void> removeDefaultData({
     required String value,
-    required List<String> listDefaultData,
-    required String key,
+    required ListDefaultData listDefaultData,
   }) async {
-    listDefaultData.remove(value);
-    Map<String, dynamic> newList = {
-      'key': key,
-      'list': listDefaultData,
-    };
-    await _firestoreUtils.editDefaultDataItem(newList);
+    List<String> list = [];
+    list.addAll(listDefaultData.list);
+    list.remove(value);
+    ListDefaultData listDefaultDataModel = listDefaultData.copyWith(
+      list: list,
+    );
+    await _firestoreUtils.editDefaultDataItem(listDefaultDataModel);
   }
 
   void showDialogEdit({
     required String key,
     required String value,
-    required List<String> listDefaultData,
+    required ListDefaultData listDefaultData,
   }) {
     dataController.text = value;
     _getDialog.showEdit(
@@ -85,7 +99,6 @@ class HrAutocompleteTextController {
           oldValue: value,
           newValue: dataController.text,
           listDefaultData: listDefaultData,
-          key: key,
         );
         Get.forceAppUpdate();
       },
@@ -94,7 +107,7 @@ class HrAutocompleteTextController {
 
   void showDialogDelete({
     required String value,
-    required List<String> listDefaultData,
+    required ListDefaultData listDefaultData,
     required String key,
   }) {
     _getDialog.showDelete(
@@ -104,7 +117,6 @@ class HrAutocompleteTextController {
           await removeDefaultData(
             value: value,
             listDefaultData: listDefaultData,
-            key: key,
           );
           Get.forceAppUpdate();
         });

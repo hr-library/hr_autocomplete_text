@@ -19,8 +19,8 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Get.to(DefaultDataListScaffold(
                   listDefaultData: [
-                    Get.put(HomePageController()).listPattern.value,
-                    Get.put(HomePageController()).listPattern2.value,
+                    Get.put(HomePageController()).listPattern.value!,
+                    Get.put(HomePageController()).listPattern2.value!,
                   ],
                   listKey: const ['pattern', 'pattern2'],
                 ));
@@ -36,14 +36,16 @@ class HomePage extends StatelessWidget {
             Obx(() => HrCustomAutocompleteTextFormField(
                   labelText: 'Motif 1',
                   controller: _homePageController.patternEditingController,
-                  suggestions: _homePageController.listPattern.value,
+                  suggestions:
+                      _homePageController.listPattern.value?.list ?? [],
                   textInputType: TextInputType.text,
                 )),
             const SizedBox(height: 20),
             Obx(() => HrCustomAutocompleteTextFormField(
                   labelText: 'Motif 2',
                   controller: _homePageController.patternEditingController2,
-                  suggestions: _homePageController.listPattern2.value,
+                  suggestions:
+                      _homePageController.listPattern2.value?.list ?? [],
                   textInputType: TextInputType.text,
                 )),
             TextButton(
